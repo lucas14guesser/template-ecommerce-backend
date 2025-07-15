@@ -11,8 +11,7 @@ async function connectDB() {
 
     try {
         const client = await pool.connect();
-        console.log("✅ Conectado ao PostgreSQL!");
-
+        console.log("Conectado ao PostgreSQL!");
         client.release();
 
         global.connection = pool;

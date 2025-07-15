@@ -55,7 +55,7 @@ Clear and maintainable code structure
 
 1. Clone the repository:
    ```bash
-    git clone https://github.com/lucasguesser/ecommerce-backend.git
+    git clone https://github.com/lucas14guesser/template-ecommerce-backend.git
 
 2. Install dependencies:
    ```bash
