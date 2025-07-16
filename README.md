@@ -30,13 +30,14 @@ Clear and maintainable code structure
 
 ## 📁 Project Structure
     ecommerce-backend/
-    ├── db/                 # Database connection and configuration
-    ├── controllers/        # Request handling logic
-    ├── routes/             # API route definitions
-    ├── services/           # Business logic and external integrations
-    ├── utils/              # Helper functions (e.g., formatting, validation)
-    ├── index.js            # Main entry point of the application
-    ├── .env                # Environment variables
+    ├── db/
+    ├── controllers/
+    ├── middlewares/
+    ├── routes/
+    ├── services/
+    ├── utils/
+    ├── index.js
+    ├── .env
     ├── package.json
     └── README.md
 

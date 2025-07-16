@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const UserControllers = require('../controllers/UserControllers');
+const { authMiddleware } = require('../middlewares/AuthMiddleware');
+const { roleMiddleWare } = require('../middlewares/RoleMiddleware');
 
 // MAIN ROUTE
 router.get('/', (req, res) => {
@@ -8,8 +10,12 @@ router.get('/', (req, res) => {
 })
 
 // USER ROUTES
-router.get('/users', UserControllers.getAllUser);
-router.get('/user/:id', UserControllers.getUserByID);
-router.post('/user', UserControllers.postUser);
+//PUBLIC ROUTES
+router.post('/login', UserControllers.loginUser);
+router.post('/cadastro', UserControllers.postUser);
+
+//PRIVATE ROUTES
+router.get('/user/:id', authMiddleware, UserControllers.getUserByID);
+router.get('/users', authMiddleware, roleMiddleWare('admin'), UserControllers.getAllUser);
 
 module.exports = router;

@@ -1,5 +1,20 @@
 const { createSuccess, createError } = require("../utils/Utils");
 
+async function login(serviceFunction, req, res) {
+    try {
+        const data = req.body;
+        const result = await serviceFunction(data);
+
+        if (!result) {
+            return res.json(createError('Credenciais inválidas'));
+        }
+
+        return res.json(createSuccess(result));
+    } catch (error) {
+        return res.json(createError('Erro ao realizar login' + error.message));
+    }
+}
+
 async function getAllItems(serviceFunction, req, res) {
     try {
         const items = await serviceFunction();
@@ -32,7 +47,7 @@ async function getItemByID(serviceFunction, req, res) {
 async function postItem(serviceFunction, req, res) {
     try {
         const data = req.body;
-        
+
         if (!data || Object.keys(data).length === 0) {
             return res.json(createError('Corpo da requisição vazio ou inválido'));
         }
@@ -45,8 +60,8 @@ async function postItem(serviceFunction, req, res) {
             res.json(createError('Erro ao processar os dados'));
         }
     } catch (error) {
-            res.json(createError('Erro ao cadastrar item' + error.message));
+        res.json(createError('Erro ao cadastrar item' + error.message));
     }
 }
 
-module.exports = { getAllItems, getItemByID, postItem };
+module.exports = { login, getAllItems, getItemByID, postItem };
