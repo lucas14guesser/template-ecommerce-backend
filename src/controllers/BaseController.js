@@ -54,6 +54,10 @@ async function postItem(serviceFunction, req, res) {
 
         const result = await serviceFunction(data);
 
+        if (result?.error) {
+            return res.json(createError(result.error));
+        }
+
         if (result) {
             res.json(createSuccess(result));
         } else {

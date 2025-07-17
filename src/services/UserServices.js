@@ -3,10 +3,14 @@ const { runQuery, runQueryOne } = require('./BaseService');
 
 async function loginUser({ user_email, user_pass }) {
     const user = await runQueryOne('SELECT * FROM ecommerce_user WHERE user_email = $1', [user_email]);
-    if (!user) return null;
+    if (!user) {
+        return { error: 'Você não possui uma conta cadastrada'}
+    };
 
     const passValid = await comparePassword(user_pass, user.user_pass);
-    if(!passValid) return null;
+    if(!passValid) {
+        return { error: 'Credenciais inválidas.'}
+    };
 
     delete user.user_pass;
 
@@ -31,7 +35,12 @@ async function getUserByID(user_id) {
 
 async function postUser({ user_nome, user_email, user_pass }) {
     if (!user_nome || !user_email || !user_pass) {
-        return null;
+        return { error: 'Todos os campos precisam ser preenchidos' };
+    }
+
+    const existingUser = await runQueryOne('SELECT * FROM ecommerce_user WHERE user_email = $1', [user_email]);
+    if (existingUser) {
+        return { error: 'E-mail já cadastrado' };
     }
     
     const hashedPass = await encryptPassword(user_pass)

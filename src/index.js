@@ -6,7 +6,7 @@ const router = require('../src/routes/routes');
 
 const app = express();
 const corsOption = {
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5173', // https://template-ecommerce-website.vercel.app/
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
