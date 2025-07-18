@@ -17,5 +17,6 @@ router.post('/cadastro', UserControllers.postUser);
 //PRIVATE ROUTES
 router.get('/user/:id', authMiddleware, UserControllers.getUserByID);
 router.get('/users', authMiddleware, roleMiddleWare('admin'), UserControllers.getAllUser);
+router.put('/user/:id', authMiddleware, UserControllers.editUser);
 
 module.exports = router;

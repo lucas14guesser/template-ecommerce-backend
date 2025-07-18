@@ -47,4 +47,8 @@ async function postUser({ user_nome, user_email, user_pass }) {
     return runQuery('INSERT INTO ecommerce_user (user_nome, user_email, user_pass) VALUES ($1, $2, $3)', [user_nome, user_email, hashedPass]);
 }
 
-module.exports = { loginUser, getAllUser, getUserByID, postUser }
+async function EditUserByID(user_id, user_nome, user_endereco, user_telefone, user_cpf) {
+    return runQueryOne('UPDATE ecommerce_user SET user_nome = $1, user_endereco = $2, user_telefone = $3, user_cpf = $4 WHERE user_id = $5 RETURNING *', [user_nome, user_endereco, user_telefone, user_cpf, user_id]);
+}
+
+module.exports = { loginUser, getAllUser, getUserByID, postUser, EditUserByID }

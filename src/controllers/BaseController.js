@@ -68,4 +68,33 @@ async function postItem(serviceFunction, req, res) {
     }
 }
 
-module.exports = { login, getAllItems, getItemByID, postItem };
+async function EditItem(serviceFunction, req, res) {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        if(!id) {
+            return res.json(createError('ID não informado'));
+        }
+
+        if (!data || Object.keys(data).length === 0) {
+            return res.json(createError('Corpo da requisição vazio ou inválido'));
+        }
+
+        const result = await serviceFunction(id, ...Object.values(data));
+
+        if (result?.error) {
+            return res.json(createError(result.error));
+        }
+
+        if (result) {
+            res.json(createSuccess(result));
+        } else {
+            res.json(createError('Nenhum item atualizado'));
+        }
+    } catch (error) {
+        res.json(createError('Erro ao editar item: ' + error.message));
+    }
+}
+
+module.exports = { login, getAllItems, getItemByID, postItem, EditItem };
