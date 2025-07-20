@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserControllers = require('../controllers/UserControllers');
+const ProdutoControllers = require('../controllers/ProdutoControllers');
 const { authMiddleware } = require('../middlewares/AuthMiddleware');
 const { roleMiddleWare } = require('../middlewares/RoleMiddleware');
 
@@ -18,5 +19,11 @@ router.post('/cadastro', UserControllers.postUser);
 router.get('/user/:id', authMiddleware, UserControllers.getUserByID);
 router.get('/users', authMiddleware, roleMiddleWare('admin'), UserControllers.getAllUser);
 router.put('/user/:id', authMiddleware, UserControllers.editUser);
+
+//PRODUTO ROUTES
+//PUBLIC ROUTES
+
+//PRIVATE ROUTES
+router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postProduto);
 
 module.exports = router;

@@ -22,7 +22,7 @@ function generateToken(payload, expiresIn = '2h') {
     return jwt.sign(payload, SECRET, { expiresIn });
 }
 
-async function verifyToken(token) {
+function verifyToken(token) {
     try {
         return jwt.verify(token, SECRET);
     } catch (error) {

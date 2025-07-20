@@ -27,6 +27,7 @@ Clear and maintainable code structure
 - [Nodemon](https://www.npmjs.com/package/nodemon)
 - [Melhor Envio API](https://docs.melhorenvio.com.br/reference/introducao-api-melhor-envio)
 - [Mercado Pago SDK](https://www.mercadopago.com.br/developers/pt/docs/sdks-library/landing)
+- [Cloudinary SDK](https://console.cloudinary.com/app/product-explorer)
 
 ## 📁 Project Structure
     ecommerce-backend/
