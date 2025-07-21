@@ -4,6 +4,7 @@ const UserControllers = require('../controllers/UserControllers');
 const ProdutoControllers = require('../controllers/ProdutoControllers');
 const { authMiddleware } = require('../middlewares/AuthMiddleware');
 const { roleMiddleWare } = require('../middlewares/RoleMiddleware');
+const { cloudinarySignature } = require('../api/Cloudinary');
 
 // MAIN ROUTE
 router.get('/', (req, res) => {
@@ -25,5 +26,8 @@ router.put('/user/:id', authMiddleware, UserControllers.editUser);
 
 //PRIVATE ROUTES
 router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postProduto);
+
+//API ROUTES
+router.post('/cloudinary-signature', cloudinarySignature);
 
 module.exports = router;

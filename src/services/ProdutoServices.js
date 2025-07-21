@@ -27,8 +27,9 @@ async function postProduto(produto) {
 
         for (const corObj of produto_cor) {
             const { cor, tamanhos } = corObj;
+            const { nome: cor_nome, valor: cor_hex } = cor;
 
-            const corResult = await runQueryOne("INSERT INTO ecommerce_cor (produto_id, cor_nome) VALUES ($1, $2) RETURNING cor_id", [produto_id, cor]);
+            const corResult = await runQueryOne("INSERT INTO ecommerce_cor (produto_id, cor_nome, cor_hex) VALUES ($1, $2, $3) RETURNING cor_id", [produto_id, cor_nome, cor_hex]);
 
             const cor_id = corResult.cor_id;
 
