@@ -23,7 +23,7 @@ router.put('/user/:id', authMiddleware, UserControllers.editUser);
 
 //PRODUTO ROUTES
 //PUBLIC ROUTES
-
+router.get('/produtos', ProdutoControllers.getAllProdutos);
 //PRIVATE ROUTES
 router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postProduto);
 
