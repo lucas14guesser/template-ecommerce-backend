@@ -14,7 +14,6 @@ async function login(serviceFunction, req, res) {
         return res.json(createError('Erro ao realizar login' + error.message));
     }
 }
-
 async function getAllItems(serviceFunction, req, res) {
     try {
         const items = await serviceFunction();
@@ -28,7 +27,6 @@ async function getAllItems(serviceFunction, req, res) {
         res.json(createError('Erro ao buscar dados: ' + error.message))
     }
 }
-
 async function getItemByID(serviceFunction, req, res) {
     try {
         const { id } = req.params;
@@ -43,7 +41,6 @@ async function getItemByID(serviceFunction, req, res) {
         res.json(createError('Erro ao buscar dados' + error.message))
     }
 }
-
 async function postItem(serviceFunction, req, res) {
     try {
         const data = req.body;
@@ -67,13 +64,12 @@ async function postItem(serviceFunction, req, res) {
         res.json(createError('Erro ao cadastrar item' + error.message));
     }
 }
-
 async function EditItem(serviceFunction, req, res) {
     try {
         const { id } = req.params;
         const data = req.body;
 
-        if(!id) {
+        if (!id) {
             return res.json(createError('ID não informado'));
         }
 
@@ -96,5 +92,22 @@ async function EditItem(serviceFunction, req, res) {
         res.json(createError('Erro ao editar item: ' + error.message));
     }
 }
+async function deleteItem(serviceFunction, req, res) {
+    try {
+        const { id } = req.params;
 
-module.exports = { login, getAllItems, getItemByID, postItem, EditItem };
+        if (!id) {
+            return res.json(createError('ID não informado'));
+        }
+        const result = await serviceFunction(id);
+
+        if (result?.error) {
+            return res.json(createError(result.error));
+        }
+        return res.json(createSuccess(result));
+    } catch (error) {
+        return res.json(createError('Erro ao excluir item: ' + error.message));
+    }
+}
+
+module.exports = { login, getAllItems, getItemByID, postItem, EditItem, deleteItem };

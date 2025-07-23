@@ -26,6 +26,8 @@ router.put('/user/:id', authMiddleware, UserControllers.editUser);
 router.get('/produtos', ProdutoControllers.getAllProdutos);
 //PRIVATE ROUTES
 router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postProduto);
+router.post('/offer-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postOffer);
+router.delete('/del-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.deleteProduto);
 
 //API ROUTES
 router.post('/cloudinary-signature', cloudinarySignature);

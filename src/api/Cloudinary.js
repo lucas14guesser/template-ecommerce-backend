@@ -1,4 +1,7 @@
 const crypto = require('crypto');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({ cloud_name: process.env.CLOUDINARY_CLOUD_NAME, api_key: process.env.CLOUDINARY_API_KEY, api_secret: process.env.CLOUDINARY_API_SECRET, })
 
 function cloudinarySignature(req, res) {
     const { timestamp, folder } = req.body;
@@ -14,4 +17,14 @@ function cloudinarySignature(req, res) {
     return res.json({ signature, timestamp, apiKey: process.env.CLOUDINARY_API_KEY });
 }
 
-module.exports = { cloudinarySignature }
+async function deleteImage(publicId) {
+    try {
+        const result = await cloudinary.uploader.destroy(publicId);
+        return result;
+    } catch (error) {
+        console.error('Erro ao deletar imagem do Cloudinary', error);
+        throw error;
+    }
+}
+
+module.exports = { cloudinarySignature, deleteImage }
