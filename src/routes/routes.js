@@ -24,10 +24,14 @@ router.put('/user/:id', authMiddleware, UserControllers.editUser);
 //PRODUTO ROUTES
 //PUBLIC ROUTES
 router.get('/produtos', ProdutoControllers.getAllProdutos);
+router.get('/produto/:id', ProdutoControllers.getProdutoById);
+
 //PRIVATE ROUTES
 router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postProduto);
 router.post('/offer-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postOffer);
 router.delete('/del-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.deleteProduto);
+router.delete('/ret-oferta/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.retirarOferta);
+router.put('/edit-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.editProdutoById);
 
 //API ROUTES
 router.post('/cloudinary-signature', cloudinarySignature);

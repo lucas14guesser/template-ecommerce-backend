@@ -18,7 +18,7 @@ function createError(errorMsg = '') {
     return { error: errorMsg, result: [] }
 }
 
-function generateToken(payload, expiresIn = '2h') {
+function generateToken(payload, expiresIn = '8h') {
     return jwt.sign(payload, SECRET, { expiresIn });
 }
 
