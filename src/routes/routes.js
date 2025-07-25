@@ -31,7 +31,7 @@ router.post('/cad-produto', authMiddleware, roleMiddleWare('admin'), ProdutoCont
 router.post('/offer-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.postOffer);
 router.delete('/del-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.deleteProduto);
 router.delete('/ret-oferta/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.retirarOferta);
-router.put('/edit-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.editProdutoById);
+router.put('/edit-produto/:id', authMiddleware, roleMiddleWare('admin'), ProdutoControllers.putProduto);
 
 //API ROUTES
 router.post('/cloudinary-signature', cloudinarySignature);

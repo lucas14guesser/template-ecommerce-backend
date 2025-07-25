@@ -19,8 +19,8 @@ async function deleteProduto(req, res) {
 async function retirarOferta(req, res) {
     return deleteItem(ProdutoServices.retirarOferta, req, res);
 }
-async function editProdutoById(req, res) {
-    return EditItem(ProdutoServices.editProdutoById, req, res)
+async function putProduto(req, res) {
+    return EditItem(ProdutoServices.putProduto, req, res)
 }
 
-module.exports = { postProduto, getAllProdutos, deleteProduto, postOffer, getProdutoById, retirarOferta, editProdutoById }
+module.exports = { postProduto, getAllProdutos, deleteProduto, postOffer, getProdutoById, retirarOferta, putProduto }

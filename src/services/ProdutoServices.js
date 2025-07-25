@@ -1,4 +1,4 @@
-const { deleteImage } = require("../api/Cloudinary");
+const { deleteImage, getPublicIdFromUrl } = require("../api/Cloudinary");
 const { runQuery, runQueryOne } = require("./BaseService");
 
 async function getAllProdutos() {
@@ -235,29 +235,37 @@ async function retirarOferta(produto_id) {
     return { error: "Erro ao retirar oferta: " + error.message };
   }
 }
-async function editProdutoById(produto_id, produto) {
+async function putProduto(produto_id, produto) {
   const { produto_nome, produto_preco, produto_lancamento = false, produto_categoria, produto_foto = [], produto_cor = [] } = produto;
 
   if (!produto_id || !produto_nome || !produto_preco || !produto_categoria) {
-    return { error: "Campos obrigatórios: id, nome, preço e categoria" };
+    return { error: "Campos obrigatórios: ID, nome, preço e categoria" };
   }
 
   try {
-    let categoriaObj = await runQueryOne("SELECT * FROM ecommerce_categoria WHERE categoria_nome = $1", [produto_categoria]);
+    const produtoExistente = await runQueryOne("SELECT * FROM ecommerce_produto WHERE produto_id = $1", [produto_id]);
+    if (!produtoExistente) {
+      return { error: "Produto não encontrado" };
+    }
 
+    let categoriaObj = await runQueryOne("SELECT * FROM ecommerce_categoria WHERE categoria_nome = $1", [produto_categoria]);
     if (!categoriaObj) {
       await runQuery("INSERT INTO ecommerce_categoria (categoria_nome) VALUES ($1)", [produto_categoria]);
       categoriaObj = await runQueryOne("SELECT * FROM ecommerce_categoria WHERE categoria_nome = $1", [produto_categoria]);
     }
-
     const categoria_id = categoriaObj.categoria_id;
 
     await runQuery(
-      `UPDATE ecommerce_produto 
-       SET produto_nome = $1, produto_preco = $2, produto_lancamento = $3, categoria_id = $4
-       WHERE produto_id = $5`,
+      "UPDATE ecommerce_produto SET produto_nome = $1, produto_preco = $2, produto_lancamento = $3, categoria_id = $4 WHERE produto_id = $5",
       [produto_nome, produto_preco, produto_lancamento, categoria_id, produto_id]
     );
+
+    const fotosAntigas = await runQuery("SELECT foto_produto_url FROM ecommerce_foto_produto WHERE produto_id = $1", [produto_id]);
+
+    for (const foto of fotosAntigas) {
+      const publicId = getPublicIdFromUrl(foto.foto_produto_url);
+      await deleteImage(publicId);
+    }
 
     await runQuery("DELETE FROM ecommerce_foto_produto WHERE produto_id = $1", [produto_id]);
 
@@ -265,26 +273,23 @@ async function editProdutoById(produto_id, produto) {
       await runQuery("INSERT INTO ecommerce_foto_produto (produto_id, foto_produto_url) VALUES ($1, $2)", [produto_id, foto.foto]);
     }
 
-    const coresAntigas = await runQuery("SELECT cor_id FROM ecommerce_cor WHERE produto_id = $1", [produto_id]);
-    for (const c of coresAntigas) {
-      await runQuery("DELETE FROM ecommerce_tamanho WHERE cor_id = $1", [c.cor_id]);
+    const coresExistentes = await runQuery("SELECT cor_id FROM ecommerce_cor WHERE produto_id = $1", [produto_id]);
+    const corIds = coresExistentes.map(c => c.cor_id);
+
+    if (corIds.length > 0) {
+      await runQuery("DELETE FROM ecommerce_tamanho WHERE cor_id = ANY($1)", [corIds]);
+      await runQuery("DELETE FROM ecommerce_cor WHERE produto_id = $1", [produto_id]);
     }
-    await runQuery("DELETE FROM ecommerce_cor WHERE produto_id = $1", [produto_id]);
 
     for (const corObj of produto_cor) {
       const { cor, tamanhos } = corObj;
-
-      if (!cor || typeof cor !== 'object' || !cor.nome || !cor.valor) {
-        continue;
-      }
+      if (!cor || typeof cor !== 'object' || !cor.nome || !cor.valor) continue;
 
       const { nome: cor_nome, valor: cor_hex } = cor;
-
       const corResult = await runQueryOne(
         "INSERT INTO ecommerce_cor (produto_id, cor_nome, cor_hex) VALUES ($1, $2, $3) RETURNING cor_id",
         [produto_id, cor_nome, cor_hex]
       );
-
       const cor_id = corResult.cor_id;
 
       for (const tam of tamanhos) {
@@ -302,4 +307,4 @@ async function editProdutoById(produto_id, produto) {
   }
 }
 
-module.exports = { postProduto, getAllProdutos, deleteProduto, postOfferProduto, getProdutoById, retirarOferta, editProdutoById }
+module.exports = { postProduto, getAllProdutos, deleteProduto, postOfferProduto, getProdutoById, retirarOferta, putProduto }

@@ -77,7 +77,7 @@ async function EditItem(serviceFunction, req, res) {
             return res.json(createError('Corpo da requisição vazio ou inválido'));
         }
 
-        const result = await serviceFunction(id, ...Object.values(data));
+        const result = await serviceFunction(id, data);
 
         if (result?.error) {
             return res.json(createError(result.error));

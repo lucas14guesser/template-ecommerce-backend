@@ -16,7 +16,13 @@ function cloudinarySignature(req, res) {
 
     return res.json({ signature, timestamp, apiKey: process.env.CLOUDINARY_API_KEY });
 }
-
+function getPublicIdFromUrl(url) {
+  const parts = url.split('/');
+  const uploadIndex = parts.indexOf('upload');
+  const relevantParts = parts.slice(uploadIndex + 2);
+  const file = relevantParts.pop();
+  return `${relevantParts.join('/')}/${file.split('.')[0]}`;
+}
 async function deleteImage(publicId) {
     try {
         const result = await cloudinary.uploader.destroy(publicId);
@@ -27,4 +33,4 @@ async function deleteImage(publicId) {
     }
 }
 
-module.exports = { cloudinarySignature, deleteImage }
+module.exports = { cloudinarySignature, getPublicIdFromUrl, deleteImage }
